@@ -8,10 +8,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.homework.dto.AllAdsDTO;
+import ru.skypro.homework.dto.AdsDTO;
 import ru.skypro.homework.dto.ExtendedAdDTO;
 import ru.skypro.homework.dto.AdDTO;
 import ru.skypro.homework.dto.CreateOrUpdateAdDTO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
@@ -21,8 +24,17 @@ import ru.skypro.homework.dto.CreateOrUpdateAdDTO;
 public class AdsController {
 
     @GetMapping
-    public ResponseEntity<AllAdsDTO> getAllAds() {
-        AllAdsDTO allAds = new AllAdsDTO();
+    public ResponseEntity<AdsDTO> getAllAds() {
+        AdsDTO allAds = new AdsDTO();
+//        AdDTO ad = new AdDTO();
+//        ad.setAuthor(1);
+//        ad.setPk(3);
+//        ad.setImage("fdfbdfbdf");
+//        ad.setTitle("phone");
+//        ad.setPrice(1000);
+//        List<AdDTO> list = new ArrayList<>();
+//        list.add(ad);
+//        allAds.setResults(list);
         return ResponseEntity.ok().body(allAds);
     }
 
@@ -53,8 +65,8 @@ public class AdsController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<AllAdsDTO> getAdsMe() {
-        AllAdsDTO allAds = new AllAdsDTO();
+    public ResponseEntity<AdsDTO> getAdsMe() {
+        AdsDTO allAds = new AdsDTO();
         return ResponseEntity.ok().body(allAds);
     }
 

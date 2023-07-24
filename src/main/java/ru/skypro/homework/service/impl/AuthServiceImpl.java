@@ -6,18 +6,24 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.RegisterDTO;
+import ru.skypro.homework.service.UserMapper;
 import ru.skypro.homework.service.AuthService;
+import ru.skypro.homework.service.UserDAO;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
     private final UserDetailsManager manager;
     private final PasswordEncoder encoder;
+    private final UserDAO userDAO;
+    private final UserMapper mapper;
 
     public AuthServiceImpl(UserDetailsManager manager,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder, UserDAO userDAO, UserMapper mapper) {
         this.manager = manager;
         this.encoder = passwordEncoder;
+        this.userDAO = userDAO;
+        this.mapper = mapper;
     }
 
     @Override
@@ -41,6 +47,7 @@ public class AuthServiceImpl implements AuthService {
                         .username(register.getUsername())
                         .roles(register.getRole().name())
                         .build());
+        userDAO.addUser(mapper.registerDTOtoUser(register));
         return true;
     }
 

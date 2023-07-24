@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class AllAdsDTO {
+public class AdsDTO {
 
     private int count;
     private List<AdDTO> results;
