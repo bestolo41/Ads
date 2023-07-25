@@ -37,6 +37,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean register(RegisterDTO register) {
+        userDAO.addUser(mapper.registerDTOtoUser(register));
         if (manager.userExists(register.getUsername())) {
             return false;
         }
@@ -47,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
                         .username(register.getUsername())
                         .roles(register.getRole().name())
                         .build());
-        userDAO.addUser(mapper.registerDTOtoUser(register));
+
         return true;
     }
 

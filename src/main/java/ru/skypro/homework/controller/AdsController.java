@@ -44,6 +44,9 @@ public class AdsController {
     @GetMapping("/{id}")
     public ResponseEntity<ExtendedAdDTO> getAds(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(adService.getAdInformation(id));
+//        ExtendedAdDTO extendedAdDTO = new ExtendedAdDTO(1, "Bulat", "Ibragimov", "opisanie", "gfdr@gmail.com", "fkgkblldlfl", "89874092753", 1000, "what is it");
+//        return ResponseEntity.status(HttpStatus.OK).body(extendedAdDTO);
+
     }
 
     @DeleteMapping("/{id}")

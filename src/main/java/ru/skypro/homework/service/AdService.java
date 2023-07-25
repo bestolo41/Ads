@@ -57,7 +57,8 @@ public class AdService {
     }
 
     public ExtendedAdDTO getAdInformation(int id) {
-        return adMapper.adToExtendedAdDTO(adDAO.getAdById(id));
+        System.out.println(adMapper.adToExtendedAdDTO(adDAO.getAdById(id)));
+        return new ExtendedAdDTO();
     }
 
     public void deleteAd(int id) {
