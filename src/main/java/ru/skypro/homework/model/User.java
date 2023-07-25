@@ -16,7 +16,7 @@ public class User {
     private static int count = 0;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "user_id")
     private int id;
     private String password;
     private String firstname;
