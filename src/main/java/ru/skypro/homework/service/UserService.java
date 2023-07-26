@@ -1,9 +1,7 @@
 package ru.skypro.homework.service;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,6 +10,7 @@ import ru.skypro.homework.dto.UpdateUserDTO;
 import ru.skypro.homework.exception.InvalidPasswordException;
 import ru.skypro.homework.exception.UserNotAuthorizedException;
 import ru.skypro.homework.model.User;
+import ru.skypro.homework.service.DAO.UserDAO;
 
 import java.io.File;
 import java.io.FileNotFoundException;

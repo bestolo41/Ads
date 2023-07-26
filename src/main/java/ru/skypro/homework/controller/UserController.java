@@ -12,7 +12,7 @@ import ru.skypro.homework.dto.NewPasswordDTO;
 import ru.skypro.homework.dto.UpdateUserDTO;
 import ru.skypro.homework.exception.InvalidPasswordException;
 import ru.skypro.homework.exception.UserNotAuthorizedException;
-import ru.skypro.homework.service.UserMapper;
+import ru.skypro.homework.service.mapper.UserMapper;
 import ru.skypro.homework.service.UserService;
 
 @Slf4j

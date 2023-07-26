@@ -9,6 +9,8 @@ import ru.skypro.homework.dto.ExtendedAdDTO;
 import ru.skypro.homework.exception.UserNotAuthorizedException;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.User;
+import ru.skypro.homework.service.DAO.AdDAO;
+import ru.skypro.homework.service.mapper.AdMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,7 +63,8 @@ public class AdService {
     }
 
     public void deleteAd(int id) {
-        adDAO.removeAdById(id);
+        Ad ad = adDAO.getAdById(id);
+        adDAO.removeAd(ad);
     }
 
     public AdDTO updateAd(int id, CreateOrUpdateAdDTO adDTO) {

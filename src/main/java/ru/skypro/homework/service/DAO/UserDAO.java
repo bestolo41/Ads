@@ -1,4 +1,4 @@
-package ru.skypro.homework.service;
+package ru.skypro.homework.service.DAO;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;

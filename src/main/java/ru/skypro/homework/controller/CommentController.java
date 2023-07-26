@@ -1,5 +1,6 @@
 package ru.skypro.homework.controller;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.CommentDTO;
 import ru.skypro.homework.dto.CommentsDTO;
 import ru.skypro.homework.dto.CreateOrUpdateCommentDTO;
+import ru.skypro.homework.exception.UserNotAuthorizedException;
+import ru.skypro.homework.service.CommentService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,28 +21,30 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/ads/{id}/comments")
 public class CommentController {
+    private final CommentService commentService;
 
     @GetMapping
     public ResponseEntity<CommentsDTO> getComments(@PathVariable int id) {
-        List<CommentDTO> comments = new ArrayList<>();
-        CommentsDTO commentsDTO = new CommentsDTO();
-        commentsDTO.setCount(comments.size());
-        commentsDTO.setResults(comments);
-        return ResponseEntity.status(HttpStatus.OK).body(commentsDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(commentService.getComments(id));
     }
 
     @PostMapping
     public ResponseEntity<CommentDTO> addComment(@PathVariable int id, @RequestBody CreateOrUpdateCommentDTO createComment) {
-        return ResponseEntity.ok().body(new CommentDTO());
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(commentService.addComment(id, createComment));
+        } catch (UserNotAuthorizedException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<Object> removeComment(@PathVariable int adId, @PathVariable int commentId) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Object> removeComment(@PathVariable int commentId) {
+        commentService.removeComment(commentId);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PatchMapping("/{commentId}")
-    public ResponseEntity<Object> updateComment(@PathVariable int adId, @PathVariable int commentId) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Object> updateComment(@PathVariable int commentId, @RequestBody CreateOrUpdateCommentDTO updateCommentDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(commentService.updateComment(commentId, updateCommentDTO));
     }
 }
