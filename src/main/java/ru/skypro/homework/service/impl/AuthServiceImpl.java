@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.RegisterDTO;
 import ru.skypro.homework.service.mapper.UserMapper;
 import ru.skypro.homework.service.AuthService;
-import ru.skypro.homework.service.DAO.UserDAO;
+import ru.skypro.homework.service.dao.UserDAO;
 
 @Service
 public class AuthServiceImpl implements AuthService {

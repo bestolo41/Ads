@@ -8,7 +8,7 @@ import ru.skypro.homework.dto.CreateOrUpdateCommentDTO;
 import ru.skypro.homework.exception.UserNotAuthorizedException;
 import ru.skypro.homework.model.Comment;
 import ru.skypro.homework.model.User;
-import ru.skypro.homework.service.DAO.CommentDAO;
+import ru.skypro.homework.service.dao.CommentDAO;
 import ru.skypro.homework.service.mapper.CommentMapper;
 
 import java.util.List;

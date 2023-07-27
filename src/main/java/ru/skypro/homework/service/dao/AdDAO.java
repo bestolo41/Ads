@@ -1,49 +1,48 @@
-package ru.skypro.homework.service.DAO;
+package ru.skypro.homework.service.dao;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.config.HibernateSessionFactoryUtil;
-import ru.skypro.homework.model.Comment;
+import ru.skypro.homework.model.Ad;
 
 import java.util.List;
 
 @Service
-public class CommentDAO {
+public class AdDAO {
 
-    public Comment getCommentById(int id) {
-        return HibernateSessionFactoryUtil.getSessionFactory().openSession().get(Comment.class, id);
+    public Ad getAdById(int id) {
+        return HibernateSessionFactoryUtil.getSessionFactory().openSession().get(Ad.class, id);
     }
 
-    public void addComment(Comment newComment) {
+    public void addAd(Ad newAd) {
         try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();) {
             Transaction transaction = session.beginTransaction();
-            session.save(newComment);
+            session.save(newAd);
             transaction.commit();
         }
     }
 
-    public List<Comment> getAllComments() {
+    public List<Ad> getAllAds() {
         try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();) {
-            List<Comment> comments = (List<Comment>) session.createQuery("From Comment").list();
-            return comments;
+            List<Ad> ads = (List<Ad>) session.createQuery("From Ad").list();
+            return ads;
         }
     }
 
-    public void updateComment(Comment comment) {
+    public void updateAd(Ad ad) {
         try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
-            session.update(comment);
+            session.update(ad);
             transaction.commit();
         }
     }
 
-    public void removeComment(Comment comment) {
+    public void removeAd(Ad ad) {
         try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
-            session.delete(comment);
+            session.delete(ad);
             transaction.commit();
         }
     }
-
 }
