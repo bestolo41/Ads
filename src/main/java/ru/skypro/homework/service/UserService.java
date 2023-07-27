@@ -1,9 +1,6 @@
 package ru.skypro.homework.service;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,20 +9,16 @@ import ru.skypro.homework.dto.UpdateUserDTO;
 import ru.skypro.homework.exception.InvalidPasswordException;
 import ru.skypro.homework.exception.UserNotAuthorizedException;
 import ru.skypro.homework.model.User;
+import ru.skypro.homework.service.dao.UserDAO;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class UserService {
-    @Value("${path.to.user.images}/")
-    static private String pathToUserImages;
     private final UserDAO userDAO;
+    private final ImageService imageService;
 
     public User getAuthorizedUser() throws UserNotAuthorizedException {
         User searchedUser = new User();
@@ -58,26 +51,10 @@ public class UserService {
         return updateUserDTO;
     }
 
-    public void updateUserImage(MultipartFile file) throws UserNotAuthorizedException {
-
+    public void updateUserImage(MultipartFile image) throws UserNotAuthorizedException, IOException {
         User user = getAuthorizedUser();
-        String imageAddress = "/users/photo/" + user.getId();
-        File tempFile = new File(
-                Path.of(pathToUserImages).toAbsolutePath().toFile(),
-                user.getId() + "_user_image.jpg");
-        writeFile(tempFile, file);
-        user.setImagePath(imageAddress);
+        user.setImagePath(imageService.uploadUserImage(image));
         userDAO.updateUser(user);
     }
 
-    private void writeFile(File tempFile, MultipartFile file) {
-        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
-            fos.write(file.getBytes());
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found!");
-        } catch (
-                IOException e) {
-            throw new RuntimeException();
-        }
-    }
 }

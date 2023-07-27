@@ -9,7 +9,10 @@ import ru.skypro.homework.dto.ExtendedAdDTO;
 import ru.skypro.homework.exception.UserNotAuthorizedException;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.User;
+import ru.skypro.homework.service.dao.AdDAO;
+import ru.skypro.homework.service.mapper.AdMapper;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,21 +21,23 @@ public class AdService {
     private final UserService userService;
     private final AdMapper adMapper;
     private final AdDAO adDAO;
+    private final ImageService imageService;
 
-    public AdService(UserService userService, AdMapper adMapper, AdDAO adDAO) {
+    public AdService(UserService userService, AdMapper adMapper, AdDAO adDAO, ImageService imageService) {
         this.userService = userService;
         this.adMapper = adMapper;
         this.adDAO = adDAO;
+        this.imageService = imageService;
     }
 
-    public AdDTO addAd(CreateOrUpdateAdDTO properties, MultipartFile image) throws UserNotAuthorizedException {
+    public AdDTO addAd(CreateOrUpdateAdDTO properties, MultipartFile image) throws UserNotAuthorizedException, IOException {
         User user = userService.getAuthorizedUser();
         Ad newAd = new Ad();
         newAd.setDescription(properties.getDescription());
         newAd.setTitle(properties.getTitle());
         newAd.setPrice(properties.getPrice());
         newAd.setAuthor(user);
-        newAd.setImage(image.getOriginalFilename());
+        newAd.setImage(imageService.uploadAdImage(image));
 
         adDAO.addAd(newAd);
 
@@ -57,12 +62,12 @@ public class AdService {
     }
 
     public ExtendedAdDTO getAdInformation(int id) {
-        System.out.println(adMapper.adToExtendedAdDTO(adDAO.getAdById(id)));
-        return new ExtendedAdDTO();
+        return adMapper.adToExtendedAdDTO(adDAO.getAdById(id));
     }
 
     public void deleteAd(int id) {
-        adDAO.removeAdById(id);
+        Ad ad = adDAO.getAdById(id);
+        adDAO.removeAd(ad);
     }
 
     public AdDTO updateAd(int id, CreateOrUpdateAdDTO adDTO) {

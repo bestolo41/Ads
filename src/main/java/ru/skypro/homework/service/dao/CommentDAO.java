@@ -1,48 +1,49 @@
-package ru.skypro.homework.service;
+package ru.skypro.homework.service.dao;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.config.HibernateSessionFactoryUtil;
-import ru.skypro.homework.model.Ad;
+import ru.skypro.homework.model.Comment;
 
 import java.util.List;
 
 @Service
-public class AdDAO {
+public class CommentDAO {
 
-    public Ad getAdById(int id) {
-        return HibernateSessionFactoryUtil.getSessionFactory().openSession().get(Ad.class, id);
+    public Comment getCommentById(int id) {
+        return HibernateSessionFactoryUtil.getSessionFactory().openSession().get(Comment.class, id);
     }
 
-    public void addAd(Ad newAd) {
+    public void addComment(Comment newComment) {
         try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();) {
             Transaction transaction = session.beginTransaction();
-            session.save(newAd);
+            session.save(newComment);
             transaction.commit();
         }
     }
 
-    public List<Ad> getAllAds() {
+    public List<Comment> getAllComments() {
         try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();) {
-            List<Ad> ads = (List<Ad>) session.createQuery("From Ad").list();
-            return ads;
+            List<Comment> comments = (List<Comment>) session.createQuery("From Comment").list();
+            return comments;
         }
     }
 
-    public void updateAd(Ad ad) {
+    public void updateComment(Comment comment) {
         try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
-            session.update(ad);
+            session.update(comment);
             transaction.commit();
         }
     }
 
-    public void removeAdById(int id) {
+    public void removeComment(Comment comment) {
         try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
-            session.delete(id);
+            session.delete(comment);
             transaction.commit();
         }
     }
+
 }

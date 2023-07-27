@@ -16,6 +16,7 @@ import ru.skypro.homework.dto.CreateOrUpdateAdDTO;
 import ru.skypro.homework.exception.UserNotAuthorizedException;
 import ru.skypro.homework.service.AdService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,15 +39,14 @@ public class AdsController {
             return ResponseEntity.status(HttpStatus.OK).body(adService.addAd(properties, image));
         } catch (UserNotAuthorizedException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ExtendedAdDTO> getAds(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(adService.getAdInformation(id));
-//        ExtendedAdDTO extendedAdDTO = new ExtendedAdDTO(1, "Bulat", "Ibragimov", "opisanie", "gfdr@gmail.com", "fkgkblldlfl", "89874092753", 1000, "what is it");
-//        return ResponseEntity.status(HttpStatus.OK).body(extendedAdDTO);
-
     }
 
     @DeleteMapping("/{id}")

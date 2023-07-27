@@ -12,8 +12,13 @@ import ru.skypro.homework.dto.NewPasswordDTO;
 import ru.skypro.homework.dto.UpdateUserDTO;
 import ru.skypro.homework.exception.InvalidPasswordException;
 import ru.skypro.homework.exception.UserNotAuthorizedException;
-import ru.skypro.homework.service.UserMapper;
+import ru.skypro.homework.service.ImageService;
+import ru.skypro.homework.service.mapper.UserMapper;
 import ru.skypro.homework.service.UserService;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
@@ -23,6 +28,7 @@ import ru.skypro.homework.service.UserService;
 public class UserController {
     private final UserService userService;
     private final UserMapper mapper;
+
 
     @PostMapping("/set_password")
     public ResponseEntity<String> setPassword(@RequestBody NewPasswordDTO password) {
@@ -59,8 +65,12 @@ public class UserController {
         try {
             userService.updateUserImage(image);
             return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         } catch (UserNotAuthorizedException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
+
+
 }

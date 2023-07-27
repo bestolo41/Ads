@@ -4,6 +4,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import ru.skypro.homework.model.Ad;
+import ru.skypro.homework.model.Comment;
 import ru.skypro.homework.model.User;
 
 
@@ -18,6 +19,7 @@ public class HibernateSessionFactoryUtil {
                 Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
                 configuration.addAnnotatedClass(User.class);
                 configuration.addAnnotatedClass(Ad.class);
+                configuration.addAnnotatedClass(Comment.class);
                 StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
                 sessionFactory = configuration.buildSessionFactory(builder.build());
 
