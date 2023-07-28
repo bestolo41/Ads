@@ -44,10 +44,10 @@ public class ImageService {
         return "/" + imagePath.getParent().toString();
     }
 
-    public String uploadAdImage(MultipartFile image) throws IOException, UserNotAuthorizedException {
+    public String uploadAdImage(String adTitle, MultipartFile image) throws IOException, UserNotAuthorizedException {
         User user = userService.getAuthorizedUser();
-        Path imagePath = Path.of(userImagePath + user.getUsername() + "/ads",
-                image.getOriginalFilename());
+        Path imagePath = Path.of(userImagePath + user.getUsername() + "/ads/" + adTitle,
+                "ad_image.jpg");
         Files.createDirectories(imagePath.getParent());
         Files.deleteIfExists(imagePath);
 
@@ -59,7 +59,7 @@ public class ImageService {
         ) {
             bis.transferTo(bos);
         }
-        return "/" + imagePath.toString().replace("\\", "/");
+        return "/" + imagePath.getParent().toString().replace("\\", "/");
     }
 
 }

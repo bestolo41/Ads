@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.LoginDTO;
 import ru.skypro.homework.dto.RegisterDTO;
+import ru.skypro.homework.model.Role;
 import ru.skypro.homework.service.AuthService;
 
 @Slf4j
@@ -28,6 +29,8 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterDTO register) {
+        if (register.getRole() == null) register.setRole(Role.USER);
+
         if (authService.register(register)) {
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {

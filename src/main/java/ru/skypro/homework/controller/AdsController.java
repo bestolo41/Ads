@@ -13,6 +13,8 @@ import ru.skypro.homework.dto.AdsDTO;
 import ru.skypro.homework.dto.ExtendedAdDTO;
 import ru.skypro.homework.dto.AdDTO;
 import ru.skypro.homework.dto.CreateOrUpdateAdDTO;
+import ru.skypro.homework.exception.NoAccessException;
+import ru.skypro.homework.exception.NoResultsException;
 import ru.skypro.homework.exception.UserNotAuthorizedException;
 import ru.skypro.homework.service.AdService;
 
@@ -51,13 +53,26 @@ public class AdsController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> removeAd(@PathVariable int id) {
-        adService.deleteAd(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        try {
+            adService.deleteAd(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } catch (UserNotAuthorizedException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (NoAccessException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<AdDTO> updateAd(@PathVariable int id, @RequestBody CreateOrUpdateAdDTO updateAd) {
-        return ResponseEntity.status(HttpStatus.OK).body(adService.updateAd(id, updateAd));
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(adService.updateAd(id, updateAd));
+        } catch (UserNotAuthorizedException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (NoAccessException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     @GetMapping("/me")
@@ -69,8 +84,23 @@ public class AdsController {
         }
     }
 
-    @PatchMapping("/{id}/image")
-    public ResponseEntity<AdDTO> updateImage(@PathVariable int id, @RequestBody MultipartFile image) {
-        return ResponseEntity.ok().body(new AdDTO());
+    @PatchMapping(value = "/{id}/image", produces = {MediaType.IMAGE_PNG_VALUE})
+    public ResponseEntity<byte[]> updateImage(@PathVariable int id, @RequestBody MultipartFile image) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(adService.updateAdImage(id, image));
+        } catch (UserNotAuthorizedException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<AdsDTO> searchAdsByTitle(@RequestParam String query) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(adService.getAdsWithTitleLike(query));
+        } catch (NoResultsException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 }

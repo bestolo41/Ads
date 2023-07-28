@@ -1,7 +1,12 @@
 package ru.skypro.homework.service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDTO;
@@ -13,12 +18,14 @@ import ru.skypro.homework.service.dao.UserDAO;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class UserService {
     private final UserDAO userDAO;
     private final ImageService imageService;
+    private final PasswordEncoder encoder;
 
     public User getAuthorizedUser() throws UserNotAuthorizedException {
         User searchedUser = new User();
@@ -33,12 +40,10 @@ public class UserService {
 
     public void setPassword(NewPasswordDTO newPasswordDTO) throws UserNotAuthorizedException, InvalidPasswordException {
         User user = getAuthorizedUser();
-        if (!user.getPassword().equals(newPasswordDTO.getCurrentPassword())) {
-            throw new InvalidPasswordException("Неверный текущий пароль");
-        } else {
-            user.setPassword(newPasswordDTO.getNewPassword());
-            userDAO.updateUser(user);
-        }
+        String encodeNewPassword = encoder.encode(newPasswordDTO.getNewPassword());
+        user.setPassword(encodeNewPassword);
+        userDAO.updateUser(user);
+
     }
 
     public UpdateUserDTO updateUserInformation(UpdateUserDTO updateUserDTO) throws UserNotAuthorizedException {
@@ -56,5 +61,6 @@ public class UserService {
         user.setImagePath(imageService.uploadUserImage(image));
         userDAO.updateUser(user);
     }
+
 
 }
