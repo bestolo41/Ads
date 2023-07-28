@@ -8,8 +8,16 @@ import ru.skypro.homework.model.Ad;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Вспомогательный класс для преобразования сущности Ad в различные DTO
+ */
 @Service
 public class AdMapper {
+    /**
+     * Преобразование Ad -> AdDTO
+     * @param ad - Ad
+     * @return
+     */
     public AdDTO adToAdDTO(Ad ad) {
         return new AdDTO(ad.getAuthor().getId(),
                 ad.getImage(),
@@ -18,6 +26,11 @@ public class AdMapper {
                 ad.getTitle());
     }
 
+    /**
+     * Преобразование коллекции с Ad в коллекцию с AdDTO
+     * @param adList
+     * @return
+     */
     public List<AdDTO> adListToAdDTOList(List<Ad> adList) {
         List<AdDTO> adDTOList = new ArrayList<>();
         for (Ad ad : adList) {
@@ -26,6 +39,11 @@ public class AdMapper {
         return adDTOList;
     }
 
+    /**
+     * Преобразование Ad -> ExtendedAdDTO
+     * @param ad
+     * @return
+     */
     public ExtendedAdDTO adToExtendedAdDTO(Ad ad) {
         return new ExtendedAdDTO(ad.getPk(),
                 ad.getAuthor().getFirstname(),

@@ -9,8 +9,17 @@ import ru.skypro.homework.model.Comment;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Вспомогательный класс для преобразования сущности Comment в CommentDTO
+ */
 @Service
 public class CommentMapper {
+
+    /**
+     * Преобразует Comment -> CommentDTO
+     * @param comment
+     * @return
+     */
     public CommentDTO commentToCommentDTO(Comment comment) {
         return new CommentDTO(comment.getAuthor().getId(),
                 comment.getAuthor().getImagePath(),
@@ -20,6 +29,11 @@ public class CommentMapper {
                 comment.getText());
     }
 
+    /**
+     * Преобразует коллекцию с Comment в коллекцию с CommentDTO
+     * @param commentList
+     * @return
+     */
     public List<CommentDTO> commentListToCommentDTOList(List<Comment> commentList) {
         List<CommentDTO> commentDTOList = new ArrayList<>();
         for (Comment comment : commentList) {

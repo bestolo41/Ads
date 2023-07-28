@@ -13,6 +13,9 @@ import java.nio.file.Path;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
+/**
+ * Сервис с бизнес-логикой для работы с изображениями
+ */
 @Service
 
 public class ImageService {
@@ -26,6 +29,13 @@ public class ImageService {
         this.userService = userService;
     }
 
+    /**
+     * Загружает аватар пользователя в директорию и возвращает путь к нему
+     * @param image - изображение
+     * @return Пуь к изображению
+     * @throws IOException - выбрасывает если произошла ошибка сохранения изображения в директорию
+     * @throws UserNotAuthorizedException - выбрасывает если пользоватеь не авторизован
+     */
     public String uploadUserImage(MultipartFile image) throws IOException, UserNotAuthorizedException {
         User user = userService.getAuthorizedUser();
         Path imagePath = Path.of(userImagePath + user.getUsername(),
@@ -44,6 +54,13 @@ public class ImageService {
         return "/" + imagePath.getParent().toString();
     }
 
+    /**
+     * Загружает изображение объявления в директорию и возвращает путь к нему
+     * @param image - изображение
+     * @return Пуь к изображению
+     * @throws IOException - выбрасывает если произошла ошибка сохранения изображения в директорию
+     * @throws UserNotAuthorizedException - выбрасывает если пользоватеь не авторизован
+     */
     public String uploadAdImage(String adTitle, MultipartFile image) throws IOException, UserNotAuthorizedException {
         User user = userService.getAuthorizedUser();
         Path imagePath = Path.of(userImagePath + user.getUsername() + "/ads/" + adTitle,
