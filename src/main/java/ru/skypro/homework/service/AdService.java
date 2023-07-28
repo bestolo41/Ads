@@ -2,11 +2,13 @@ package ru.skypro.homework.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.webjars.NotFoundException;
 import ru.skypro.homework.dto.AdDTO;
 import ru.skypro.homework.dto.AdsDTO;
 import ru.skypro.homework.dto.CreateOrUpdateAdDTO;
 import ru.skypro.homework.dto.ExtendedAdDTO;
 import ru.skypro.homework.exception.NoAccessException;
+import ru.skypro.homework.exception.NoResultsException;
 import ru.skypro.homework.exception.UserNotAuthorizedException;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.Role;
@@ -99,5 +101,18 @@ public class AdService {
         ad.setImage(imageService.uploadAdImage(ad.getTitle(), image));
         adDAO.updateAd(ad);
         return image.getBytes();
+    }
+
+    public AdsDTO getAdsWithTitleLike(String query) throws NoResultsException {
+        List<AdDTO> list = adDAO.getAllAds().stream()
+                .filter(ad -> ad.getTitle().contains(query))
+                .map(adMapper::adToAdDTO)
+                .collect(Collectors.toList());
+
+        if (list.isEmpty()) {
+            return new AdsDTO(list.size(), list);
+        } else {
+            throw new NoResultsException("Результатов по запросу нет");
+        }
     }
 }

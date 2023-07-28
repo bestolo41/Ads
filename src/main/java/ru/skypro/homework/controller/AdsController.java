@@ -14,6 +14,7 @@ import ru.skypro.homework.dto.ExtendedAdDTO;
 import ru.skypro.homework.dto.AdDTO;
 import ru.skypro.homework.dto.CreateOrUpdateAdDTO;
 import ru.skypro.homework.exception.NoAccessException;
+import ru.skypro.homework.exception.NoResultsException;
 import ru.skypro.homework.exception.UserNotAuthorizedException;
 import ru.skypro.homework.service.AdService;
 
@@ -91,6 +92,15 @@ public class AdsController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<AdsDTO> searchAdsByTitle(@RequestParam String query) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(adService.getAdsWithTitleLike(query));
+        } catch (NoResultsException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 }
