@@ -7,6 +7,7 @@ import ru.skypro.homework.config.HibernateSessionFactoryUtil;
 import ru.skypro.homework.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserDAO {
@@ -16,6 +17,12 @@ public class UserDAO {
             session.save(newUser);
             transaction.commit();
         }
+    }
+
+    public Optional<User> getUserByUsername(String username) {
+        return getAllUsers().stream()
+                .filter(user -> user.getUsername().equals(username))
+                .findFirst();
     }
 
     public List<User> getAllUsers() {

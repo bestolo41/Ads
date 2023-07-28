@@ -31,10 +31,10 @@ public class ImageController {
         }
     }
 
-    @GetMapping(value = "/src/main/resources/users/{directory}/ads/{filename}", produces = {MediaType.IMAGE_PNG_VALUE})
-    public byte[] getAdImage(@PathVariable String directory, @PathVariable String filename) {
+    @GetMapping(value = "/src/main/resources/users/{userDirectory}/ads/{adDirectory}", produces = {MediaType.IMAGE_PNG_VALUE})
+    public byte[] getAdImage(@PathVariable String userDirectory, @PathVariable String adDirectory) {
         try {
-            Path fileContent = Path.of("src/main/resources/users/" + directory + "/ads/"  + filename);
+            Path fileContent = Path.of("src/main/resources/users/" + userDirectory + "/ads/"  + adDirectory, "ad_image.jpg");
             return Files.readAllBytes(fileContent);
 
         } catch (IOException e) {

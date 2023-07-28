@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.CommentDTO;
 import ru.skypro.homework.dto.CommentsDTO;
 import ru.skypro.homework.dto.CreateOrUpdateCommentDTO;
+import ru.skypro.homework.exception.NoAccessException;
 import ru.skypro.homework.exception.UserNotAuthorizedException;
 import ru.skypro.homework.service.CommentService;
 
@@ -39,12 +40,24 @@ public class CommentController {
 
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Object> removeComment(@PathVariable int commentId) {
-        commentService.removeComment(commentId);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        try {
+            commentService.removeComment(commentId);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (UserNotAuthorizedException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (NoAccessException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     @PatchMapping("/{commentId}")
     public ResponseEntity<Object> updateComment(@PathVariable int commentId, @RequestBody CreateOrUpdateCommentDTO updateCommentDTO) {
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.updateComment(commentId, updateCommentDTO));
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(commentService.updateComment(commentId, updateCommentDTO));
+        } catch (UserNotAuthorizedException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (NoAccessException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 }

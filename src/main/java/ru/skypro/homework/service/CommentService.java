@@ -5,8 +5,10 @@ import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.CommentDTO;
 import ru.skypro.homework.dto.CommentsDTO;
 import ru.skypro.homework.dto.CreateOrUpdateCommentDTO;
+import ru.skypro.homework.exception.NoAccessException;
 import ru.skypro.homework.exception.UserNotAuthorizedException;
 import ru.skypro.homework.model.Comment;
+import ru.skypro.homework.model.Role;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.service.dao.CommentDAO;
 import ru.skypro.homework.service.mapper.CommentMapper;
@@ -37,15 +39,27 @@ public class CommentService {
         return new CommentsDTO(comments.size(), mapper.commentListToCommentDTOList(comments));
     }
 
-    public void removeComment( int commentId) {
+    public void removeComment(int commentId) throws UserNotAuthorizedException, NoAccessException {
+        User user = userService.getAuthorizedUser();
         Comment comment = commentDAO.getCommentById(commentId);
-        commentDAO.removeComment(comment);
+
+        if (comment.getAuthor().getId() == user.getId() || user.getRole().equals(Role.ADMIN)) {
+            commentDAO.removeComment(comment);
+        } else {
+            throw new NoAccessException("No access");
+        }
     }
 
-    public CreateOrUpdateCommentDTO updateComment(int commentId, CreateOrUpdateCommentDTO updateCommentDTO) {
+    public CreateOrUpdateCommentDTO updateComment(int commentId, CreateOrUpdateCommentDTO updateCommentDTO) throws UserNotAuthorizedException, NoAccessException {
+        User user = userService.getAuthorizedUser();
         Comment comment = commentDAO.getCommentById(commentId);
-        comment.setText(updateCommentDTO.getText());
-        commentDAO.updateComment(comment);
-        return updateCommentDTO;
+
+        if (comment.getAuthor().getId() == user.getId() || user.getRole().equals(Role.ADMIN)) {
+            comment.setText(updateCommentDTO.getText());
+            commentDAO.updateComment(comment);
+            return updateCommentDTO;
+        } else {
+            throw new NoAccessException("No access");
+        }
     }
 }
