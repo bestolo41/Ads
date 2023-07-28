@@ -8,11 +8,19 @@ import ru.skypro.homework.dto.RegisterDTO;
 import ru.skypro.homework.dto.UserDTO;
 import ru.skypro.homework.model.User;
 
+/**
+ * Вспомогательный класс для преобразования сущности User в различные DTO и наоборот
+ */
 @Service
 @RequiredArgsConstructor
 public class UserMapper {
     private final PasswordEncoder encoder;
 
+    /**
+     * Преобразует registerDTO -> User
+     * @param dto
+     * @return
+     */
     public User registerDTOtoUser(RegisterDTO dto) {
         User user = new User();
         user.setFirstname(dto.getFirstName());
@@ -25,6 +33,11 @@ public class UserMapper {
         return user;
     }
 
+    /**
+     * Преобразует User -> UserDTO
+     * @param user
+     * @return
+     */
     public UserDTO userToUserDTO(User user) {
         return new UserDTO(user.getId(),
                 user.getUsername(),

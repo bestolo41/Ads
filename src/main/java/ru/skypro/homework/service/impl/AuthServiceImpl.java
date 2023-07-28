@@ -13,6 +13,9 @@ import ru.skypro.homework.service.mapper.UserMapper;
 import ru.skypro.homework.service.AuthService;
 import ru.skypro.homework.service.dao.UserDAO;
 
+/**
+ * Сервис для работы с авторизацией и регистрацией
+ */
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -28,6 +31,7 @@ public class AuthServiceImpl implements AuthService {
         this.userDAO = userDAO;
         this.mapper = mapper;
     }
+
 
     @Override
     public boolean login(String userName, String password) {

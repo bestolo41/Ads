@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Сервис бизнес-логики для работы с пользователями
+ */
 @Service
 @AllArgsConstructor
 public class UserService {
@@ -27,6 +30,11 @@ public class UserService {
     private final ImageService imageService;
     private final PasswordEncoder encoder;
 
+    /**
+     * Возвращает авторизованного пользователя
+     * @return
+     * @throws UserNotAuthorizedException - выбрасывает если пользователь не авторизован
+     */
     public User getAuthorizedUser() throws UserNotAuthorizedException {
         User searchedUser = new User();
         searchedUser.setUsername(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -38,7 +46,12 @@ public class UserService {
         }
     }
 
-    public void setPassword(NewPasswordDTO newPasswordDTO) throws UserNotAuthorizedException, InvalidPasswordException {
+    /**
+     * Меняет пароль пользователя в базе данных
+     * @param newPasswordDTO - данные с новым паролем
+     * @throws UserNotAuthorizedException - выбрасывает если пользователь не авторизован
+     */
+    public void setPassword(NewPasswordDTO newPasswordDTO) throws UserNotAuthorizedException {
         User user = getAuthorizedUser();
         String encodeNewPassword = encoder.encode(newPasswordDTO.getNewPassword());
         user.setPassword(encodeNewPassword);
@@ -46,6 +59,12 @@ public class UserService {
 
     }
 
+    /**
+     * Обновляет информацию о пользоваетеле в базе данных и возвращает новые данные для отображения
+     * @param updateUserDTO - новые данные пользователя
+     * @return
+     * @throws UserNotAuthorizedException - выбрасывает если пользователь не авторизован
+     */
     public UpdateUserDTO updateUserInformation(UpdateUserDTO updateUserDTO) throws UserNotAuthorizedException {
         User user = getAuthorizedUser();
         user.setFirstname(updateUserDTO.getFirstName());
@@ -56,6 +75,12 @@ public class UserService {
         return updateUserDTO;
     }
 
+    /**
+     * Обновляет аватар пользователя
+     * @param image - изображение
+     * @throws UserNotAuthorizedException - выбрасывает если пользователь не авторизован
+     * @throws IOException - выбрасывает если произошла ошибка сохранения изображения
+     */
     public void updateUserImage(MultipartFile image) throws UserNotAuthorizedException, IOException {
         User user = getAuthorizedUser();
         user.setImagePath(imageService.uploadUserImage(image));
